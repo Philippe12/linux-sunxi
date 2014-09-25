@@ -851,6 +851,7 @@ static void ion_buffer_sync_for_device(struct ion_buffer *buffer,
 	struct ion_vma_list *vma_list;
 	int pages = PAGE_ALIGN(buffer->size) / PAGE_SIZE;
 	int i;
+	dma_addr_t dma_addr;
 
 	pr_debug("%s: syncing for device %s\n", __func__,
 		 dev ? dev_name(dev) : "null");
@@ -862,8 +863,10 @@ static void ion_buffer_sync_for_device(struct ion_buffer *buffer,
 	for (i = 0; i < pages; i++) {
 		struct page *page = buffer->pages[i];
 
-		if (ion_buffer_page_is_dirty(page))
-			__dma_page_cpu_to_dev(page, 0, PAGE_SIZE, dir);
+		if (ion_buffer_page_is_dirty(page)) {
+			dma_addr = pfn_to_dma(dev, page_to_pfn(page));
+			arm_dma_ops.sync_single_for_device(dev, dma_addr, PAGE_SIZE, dir);
+		}
 		ion_buffer_page_clean(buffer->pages + i);
 	}
 	list_for_each_entry(vma_list, &buffer->vmas, list) {
