@@ -12,8 +12,13 @@
 # (at your option) any later version.
 
 set -e
+cpu_cores=1
+if [[ $LICHEE_HOST_PLATFORM == 'darwin' ]]; then
+	cpu_cores=`sysctl -a | grep machdep.cpu | grep core_count | cut -d: -f2`
+else
+	cpu_cores=`cat /proc/cpuinfo | grep "processor" | wc -l`;
+fi
 
-cpu_cores=`cat /proc/cpuinfo | grep "processor" | wc -l`
 if [ ${cpu_cores} -le 8 ] ; then
     jobs=${cpu_cores}
 else
@@ -22,7 +27,11 @@ fi
 
 # Setup common variables
 export ARCH=arm
-export CROSS_COMPILE=arm-linux-gnueabi-
+if [[ $LICHEE_HOST_PLATFORM == 'darwin' ]]; then
+	export CROSS_COMPILE=arm-linux-gnueabihf-
+else
+	export CROSS_COMPILE=arm-linux-gnueabi-
+fi
 export AS=${CROSS_COMPILE}as
 export LD=${CROSS_COMPILE}ld
 export CC=${CROSS_COMPILE}gcc
