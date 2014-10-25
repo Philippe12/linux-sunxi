@@ -28,7 +28,7 @@ fi
 # Setup common variables
 export ARCH=arm
 if [[ $LICHEE_HOST_PLATFORM == 'darwin' ]]; then
-	export CROSS_COMPILE=arm-linux-gnueabihf-
+	export CROSS_COMPILE=arm-linux-androideabi-
 else
 	export CROSS_COMPILE=arm-linux-gnueabi-
 fi
