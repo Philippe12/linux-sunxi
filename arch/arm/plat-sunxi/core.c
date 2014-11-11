@@ -121,7 +121,7 @@ static void __init sun7i_map_io(void)
  */
 
 unsigned long fb_start;
-unsigned long fb_size = SZ_32M;
+unsigned long fb_size = 128 * SZ_1M;
 EXPORT_SYMBOL(fb_start);
 EXPORT_SYMBOL(fb_size);
 
@@ -235,6 +235,30 @@ static void __init sw_core_reserve(void)
 	/* Ensure this is set before any arch_init funcs call script_foo */
 	sunxi_script_init((void *)__va(SYS_CONFIG_MEMBASE));
 }
+
+static int sun7i_mem_size = PLAT_MEM_SIZE;
+
+u32 sun7i_ion_carveout_size(void)
+{        
+    u32 size = 0;
+#if defined(CONFIG_ION) || defined(CONFIG_ION_MODULE)
+    size = ION_CARVEOUT_MEM_SIZE_DEFAULT;
+    if (sun7i_mem_size > 512 * 1024 *1024)
+    {
+#ifdef CONFIG_ION_SUNXI_CARVEOUT_SIZE_1G
+        size = CONFIG_ION_SUNXI_CARVEOUT_SIZE_1G * SZ_1M;
+#endif    
+    }
+    else
+    {
+#ifdef CONFIG_ION_SUNXI_CARVEOUT_SIZE_512M
+        size = CONFIG_ION_SUNXI_CARVEOUT_SIZE_512M * SZ_1M;
+#endif    
+    }
+#endif
+    return size;
+}
+EXPORT_SYMBOL(sun7i_ion_carveout_size);
 
 void sw_irq_ack(struct irq_data *irqd)
 {

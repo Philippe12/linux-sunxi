@@ -41,7 +41,7 @@
 #include <linux/ion_sunxi.h>
 #include <linux/vmalloc.h>
 #include <asm/setup.h>
-#include <mach/system.h>
+#include <plat/system.h>
 #include "../ion_priv.h"
 
 #define DEV_NAME	"ion-sunxi"
@@ -168,29 +168,31 @@ int sunxi_ion_remove(struct platform_device *pdev)
 	return 0;
 }
 
+static struct ion_platform_heap ion_heaps[] = {
+	[0] = {
+		.type = ION_HEAP_TYPE_SYSTEM,
+		.id = (u32)ION_HEAP_TYPE_SYSTEM,
+		.name = "sytem",
+	},
+	[1] = {
+		.type = ION_HEAP_TYPE_SYSTEM_CONTIG,
+		.id = (u32)ION_HEAP_TYPE_SYSTEM_CONTIG,
+		.name = "system_contig",
+	},
+	[2] = {
+		.type = ION_HEAP_TYPE_CARVEOUT,
+		.id = (u32)ION_HEAP_TYPE_CARVEOUT,
+		.name = "carveout",
+		.base = ION_CARVEOUT_MEM_BASE, 
+		.size = ION_CARVEOUT_MEM_SIZE_DEFAULT,
+		.align = 0,
+		.priv = NULL,
+	},
+};
+
 static struct ion_platform_data ion_data = {
 	.nr = 3,
-	.heaps = {
-		[0] = {
-			.type = ION_HEAP_TYPE_SYSTEM,
-			.id = (u32)ION_HEAP_TYPE_SYSTEM,
-			.name = "sytem",
-		},
-		[1] = {
-			.type = ION_HEAP_TYPE_SYSTEM_CONTIG,
-			.id = (u32)ION_HEAP_TYPE_SYSTEM_CONTIG,
-			.name = "system_contig",
-		},
-		[2] = {
-			.type = ION_HEAP_TYPE_CARVEOUT,
-			.id = (u32)ION_HEAP_TYPE_CARVEOUT,
-			.name = "carveout",
-			.base = ION_CARVEOUT_MEM_BASE, 
-			.size = ION_CARVEOUT_MEM_SIZE_DEFAULT,
-			.align = 0,
-			.priv = NULL,
-		},
-	}
+	.heaps = ion_heaps,
 };
 
 

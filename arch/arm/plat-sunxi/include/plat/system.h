@@ -175,5 +175,6 @@ struct sw_chip_id
 };
 
 int sw_get_chip_id(struct sw_chip_id *);
+extern u32 sun7i_ion_carveout_size(void);
 
 #endif
