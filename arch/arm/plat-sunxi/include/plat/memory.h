@@ -28,7 +28,38 @@
 #define PLAT_PHYS_OFFSET		UL(0x40000000)
 
 /* default ATAG_MEM size */
-#define MEM_SIZE	(512*1024*1024)
+#define MEM_SIZE	(1024*1024*1024)
+
+#define PLAT_MEM_SIZE                   MEM_SIZE
+
+#define SYS_CONFIG_MEMBASE             (PLAT_PHYS_OFFSET + SZ_32M + SZ_16M) /* +48M */
+#define SYS_CONFIG_MEMSIZE             (SZ_64K) /* 64K */
+
+
+
+#define SUPER_STANDBY_SIZE             0x00020000 /* SZ_128K */
+#define SUPER_STANDBY_BASE             (0x52000000) /* NOTICE: this addr can not be change */
+
+/*
+ * memory reserved areas.
+ */
+#define SW_VE_MEM_BASE                 (PLAT_PHYS_OFFSET + SZ_64M)
+
+#define HW_RESERVED_MEM_BASE           (SW_VE_MEM_BASE)    
+#define HW_RESERVED_MEM_SIZE_1G        (0x06000000 + 0x01400000)   		/* 116M(DE+VE(CSI)+FB) */
+#define HW_RESERVED_MEM_SIZE_512M      (0x04000000 + 0x01000000)   		/* 80M(DE+VE(CSI)+FB) */
+
+#define SW_GPU_MEM_BASE                (HW_RESERVED_MEM_BASE + HW_RESERVED_MEM_SIZE_1G)
+#define SW_GPU_MEM_SIZE_1G             0x04000000 /* SZ_64M */
+#define SW_GPU_MEM_SIZE_512M           0x04000000 /* SZ_64M */
+
+#define SW_G2D_MEM_BASE                (SW_GPU_MEM_BASE + SW_GPU_MEM_SIZE_1G)
+#define SW_G2D_MEM_SIZE                0 
+
+#if defined(CONFIG_ION) || defined(CONFIG_ION_MODULE)
+#define ION_CARVEOUT_MEM_BASE          (SW_VE_MEM_BASE) 
+#define ION_CARVEOUT_MEM_SIZE_DEFAULT  (128 * SZ_1M)  /* in Mbytes */
+#endif
 
 /*
  * HACK: if 'x' argument is lower than PLAT_PHYS_OFFSET in the '__phys_to_bus'
