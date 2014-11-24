@@ -646,6 +646,21 @@ typedef struct {
 	__bool br_swap[2];
 } __disp_init_t;
 
+typedef struct
+{   
+    int                     post2_layers;
+    __bool                  use_sgx;
+    __disp_layer_info_t     layer_info[8];
+    __disp_rect_t           fb_scn_win;
+    __u32                   fb_yoffset;
+    int                 primary_display_layer_num;
+    int                 show_black[2];
+    int                 time_stamp;
+
+   int                 acquireFenceFd[8];
+   struct sync_fence       *acquireFence[8];
+}setup_dispc_data_t;
+
 typedef enum tag_DISP_CMD {
 	/* ----disp global---- */
 	DISP_CMD_VERSION = 0x00,
@@ -694,6 +709,14 @@ typedef enum tag_DISP_CMD {
 	DISP_CMD_DRC_SET_WINDOW = 0x28,
 	DISP_CMD_DRC_ON = 0x29,
 	DISP_CMD_GET_DE_FLICKER_EN = 0x2a,
+	DISP_CMD_VSYNC_EVENT_EN = 0x2b,
+	DISP_CMD_DRC_GET_WINDOW = 0x2c,
+	DISP_CMD_SET_ENHANCE_MODE = 0x2d,
+	DISP_CMD_GET_ENHANCE_MODE = 0x2e,
+	DISP_CMD_SET_ENHANCE_WINDOW = 0X2f,
+	DISP_CMD_GET_ENHANCE_WINDOW = 0X30,
+	DISP_CMD_SET_OVL_MODE = 0x31,
+
 
 	/* ----layer---- */
 	DISP_CMD_LAYER_REQUEST = 0x40,
@@ -858,6 +881,8 @@ typedef enum tag_DISP_CMD {
 	/* ---pwm -------- */
 	DISP_CMD_PWM_SET_PARA = 0x300,
 	DISP_CMD_PWM_GET_PARA = 0x301,
+
+	DISP_CMD_HWC_COMMIT = 0x400,
 } __disp_cmd_t;
 
 #define GET_UMP_SECURE_ID_BUF1 _IOWR('m', 310, unsigned int)

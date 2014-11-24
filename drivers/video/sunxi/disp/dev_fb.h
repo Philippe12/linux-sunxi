@@ -53,13 +53,38 @@ typedef struct {
 	__disp_fb_create_para_t fb_para[SUNXI_MAX_FB];
 	wait_queue_head_t wait[SUNXI_MAX_FB];
 	unsigned long wait_count[SUNXI_MAX_FB];
+	wait_queue_head_t       wait_frame;
 	__u32 pseudo_palette[SUNXI_MAX_FB][16];
 #ifdef CONFIG_FB_SUNXI_UMP
 	ump_dd_handle ump_wrapped_buffer[SUNXI_MAX_FB][3];
 #endif
 	/* screen_base address, allocated with disp_malloc() */
 	void *malloc_screen_base[SUNXI_MAX_FB];
+
+	unsigned long		    wait_frame_count;
+
+        //add by heyihang.Jan 28, 2013
+    	struct work_struct      vsync_work[2];
+        ktime_t                 vsync_timestamp[2];
+	struct work_struct      commit_work;
+    __bool                  b_no_output;
+	
+	__u32                   reg_active[2];
+	
+    struct list_head        update_regs_list;
+    struct sw_sync_timeline *timeline;
+    int                     timeline_max;
+    struct mutex            update_regs_list_lock;
+    spinlock_t              update_reg_lock;
+    struct sync_fence       *acquireFence[8];
 } fb_info_t;
+
+typedef struct
+{   
+    struct list_head    list;
+    setup_dispc_data_t    hwc_data;
+}dispc_data_list_t;
+
 
 extern fb_info_t g_fbi;
 

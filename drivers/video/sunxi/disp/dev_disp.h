@@ -45,5 +45,10 @@ __s32 DRV_lcd_close(__u32 sel);
 
 __s32 disp_set_hdmi_func(__disp_hdmi_func *func);
 __s32 disp_get_pll_freq(__u32 pclk, __u32 *pll_freq,  __u32 *pll_2x);
+//add by heyihang.Jan 28, 2013
+extern __s32 DRV_disp_vsync_event(__u32 sel);
+
+extern int hwc_commit(int sel, setup_dispc_data_t *disp_data);
+
 
 #endif

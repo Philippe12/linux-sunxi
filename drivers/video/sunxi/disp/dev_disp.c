@@ -286,8 +286,10 @@ __s32 DRV_DISP_Init(void)
 
 	init_waitqueue_head(&g_fbi.wait[0]);
 	init_waitqueue_head(&g_fbi.wait[1]);
+	init_waitqueue_head(&g_fbi.wait_frame);
 	g_fbi.wait_count[0] = 0;
 	g_fbi.wait_count[1] = 0;
+	 g_fbi.wait_frame_count = 0;
 
 	memset(&para, 0, sizeof(__disp_bsp_init_para));
 	para.base_image0 = (__u32) g_fbi.base_image0;
@@ -304,6 +306,9 @@ __s32 DRV_DISP_Init(void)
 	para.base_pioc = (__u32) g_fbi.base_pioc;
 	para.base_pwm = (__u32) g_fbi.base_pwm;
 	para.disp_int_process = DRV_disp_int_process;
+
+	//add by heyihang.Jan 28, 2013
+        para.vsync_event    = DRV_disp_vsync_event;
 
 	memset(&g_disp_drv, 0, sizeof(struct __disp_drv_t));
 
@@ -882,6 +887,11 @@ static long disp_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 
 	case DISP_CMD_DE_FLICKER_OFF:
 		ret = BSP_disp_de_flicker_enable(ubuffer[0], 0);
+		break;
+
+	//add by heyihang.Jan 28, 2013
+	case DISP_CMD_VSYNC_EVENT_EN:
+		ret = BSP_disp_vsync_event_enable(ubuffer[0], ubuffer[1]);
 		break;
 
 	case DISP_CMD_GET_DE_FLICKER_EN:
@@ -1863,6 +1873,19 @@ static long disp_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 	case DISP_CMD_PRINT_REG:
 		ret = BSP_disp_print_reg(1, ubuffer[0]);
 		break;
+	
+	case DISP_CMD_HWC_COMMIT:
+	{
+		setup_dispc_data_t para;
+
+		if(copy_from_user(&para, (void __user *)ubuffer[1],sizeof(setup_dispc_data_t)))
+		{
+			__wrn("copy_from_user fail\n");
+			return  -EFAULT;
+		}
+		ret = hwc_commit(ubuffer[0], &para);
+		break;
+	}
 
 	default:
 		break;

@@ -645,6 +645,8 @@ LCD_get_sys_config(__u32 sel, __disp_lcd_cfg_t *lcd_cfg)
 
 		lcd_cfg->init_bright = value;
 	}
+	//add by heyihang.Jan 28, 2013
+	gdisp.screen[sel].lcd_bright = lcd_cfg->init_bright;
 }
 
 
@@ -697,6 +699,17 @@ TCON_close(__u32 sel)
 	}
 }
 EXPORT_SYMBOL(TCON_close);
+
+int TCON_get_open_status(__u32 screen_id)
+{
+	if(gdisp.screen[screen_id].lcdc_status & (LCDC_TCON0_USED | LCDC_TCON1_USED)) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+EXPORT_SYMBOL(TCON_get_open_status);
+
 
 static __u32 pwm_read_reg(__u32 offset)
 {
