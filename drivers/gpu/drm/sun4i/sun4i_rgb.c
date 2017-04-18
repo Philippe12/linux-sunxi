@@ -173,7 +173,7 @@ static void sun4i_rgb_encoder_mode_set(struct drm_encoder *encoder,
 	struct sun4i_rgb *rgb = drm_encoder_to_sun4i_rgb(encoder);
 	struct sun4i_tcon *tcon = rgb->tcon;
 
-	sun4i_tcon0_mode_set(tcon, mode);
+	sun4i_tcon0_mode_set(tcon, mode, DRM_MODE_ENCODER_DAC);
 
 	clk_set_rate(tcon->dclk, mode->crtc_clock * 1000);
 
