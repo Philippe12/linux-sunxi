@@ -197,10 +197,9 @@ static struct drm_encoder_funcs sun4i_lvds_enc_funcs = {
 	.destroy	= sun4i_lvds_enc_destroy,
 };
 
-int sun4i_lvds_init(struct drm_device *drm)
+int sun4i_lvds_init(struct drm_device *drm, struct sun4i_tcon *tcon)
 {
 	struct sun4i_drv *drv = drm->dev_private;
-	struct sun4i_tcon *tcon = drv->tcon;
 	struct drm_encoder *encoder;
 	struct sun4i_lvds *lvds;
 	int ret;
@@ -257,7 +256,7 @@ int sun4i_lvds_init(struct drm_device *drm)
 	if (!IS_ERR(encoder->bridge)) {
 		encoder->bridge->encoder = &lvds->encoder;
 
-		ret = drm_bridge_attach(drm, encoder->bridge);
+		ret = drm_bridge_attach(encoder, encoder->bridge, NULL);
 		if (ret) {
 			dev_err(drm->dev, "Couldn't attach our bridge\n");
 			goto err_cleanup_connector;
