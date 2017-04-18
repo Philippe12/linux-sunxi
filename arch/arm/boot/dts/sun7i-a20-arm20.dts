@@ -89,11 +89,11 @@
 			default-state = "on";
 		};
 	};
-/*
+
 	panel: panel {
 		compatible = "dlc,lcd-dlc0700ddg";
 		backlight = <&backlight>;
-		enable-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>; *//* PH8 *//*
+		enable-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
 		pinctrl-names = "default";
 		pinctrl-0 = <&lcd_enable_pin &lcd_lvds0_pins>;
 		#address-cells = <1>;
@@ -113,7 +113,7 @@
 		compatible = "allwinner,sun5i-a13-display-engine";
 		allwinner,pipelines = <&fe0>;
 	};
-*/	
+
 	reg_axp_ipsout: axp_ipsout {
 		compatible = "regulator-fixed";
 		regulator-name = "axp-ipsout";
@@ -122,11 +122,11 @@
 		regulator-always-on;
 	};
 };
-/*
+
 &be0 {
 	status = "okay";
 };
-*/
+
 &ahci {
 	target-supply = <&reg_ahci_5v>;
 	status = "okay";
@@ -159,11 +159,11 @@
 		reg = <1>;
 	};
 };
-/*
+
 &fe0 {
 	status = "okay";
 };
-*/
+
 &i2c0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c0_pins_a>;
@@ -406,7 +406,7 @@
 		    <&spi2_cs0_pins_a>;
 	status = "okay";
 };
-/*
+
 &tcon0 {
 	mode = "lvds";
 	status = "okay";
@@ -418,7 +418,7 @@
 		remote-endpoint = <&panel_input>;
 	};
 };
-*/
+
 &uart0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&uart0_pins_a>;
