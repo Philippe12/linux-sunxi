@@ -39,7 +39,7 @@ cmd_make-caps = echo "static const char *const capability_names[] = {" > $@ ;\
 # Transforms lines from
 #    #define RLIMIT_STACK		3	/* max stack size */
 # to
-# RLIMIT_STACK, 
+# RLIMIT_STACK,
 #
 # and build the securityfs entries for the mapping.
 # Transforms lines from
@@ -54,10 +54,10 @@ cmd_make-rlim = echo "static const char *const rlim_names[RLIM_NLIMITS] = {" \
 	    -e 's/^\# ?define[ \t]+(RLIMIT_([A-Z0-9_]+)).*/[\1] = "\L\2",/p';\
 	echo "};" >> $@ ;\
 	echo "static const int rlim_map[RLIM_NLIMITS] = {" >> $@ ;\
-	sed -r -n "s/^\# ?define[ \t]+(RLIMIT_[A-Z0-9_]+).*/\1,/p" $< >> $@ ;\
+	sed -E -n "s/^\# ?define[ \t]+(RLIMIT_[A-Z0-9_]+).*/\1,/p" $< >> $@ ;\
 	echo "};" >> $@ ; \
 	echo -n '\#define AA_FS_RLIMIT_MASK "' >> $@ ;\
-	sed -r -n 's/^\# ?define[ \t]+RLIMIT_([A-Z0-9_]+).*/\L\1/p' $< | \
+	sed -E -n 's/^\# ?define[ \t]+RLIMIT_([A-Z0-9_]+).*/\L\1/p' $< | \
 	    tr '\n' ' ' | sed -e 's/ $$/"\n/' >> $@
 
 $(obj)/capability.o : $(obj)/capability_names.h
